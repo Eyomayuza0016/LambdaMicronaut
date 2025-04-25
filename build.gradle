@@ -1,7 +1,8 @@
 plugins {
-    id("io.micronaut.application") version "4.5.3"
+    id("io.micronaut.application") version "4.5.0"
     id("com.gradleup.shadow") version "8.3.6"
-    id("io.micronaut.aot") version "4.5.3"
+    id("io.micronaut.aot") version "4.5.0"
+    id 'jacoco'
 }
 
 version = "0.1"
@@ -9,17 +10,17 @@ group = "com.coom.ath"
 
 repositories {
     mavenCentral()
-    mavenLocal()
-}
-tasks.register('buildZip', Zip) {
-    from compileJava
-    from processResources
-    into('lib') {
-        from configurations.runtimeClasspath
-    }
 }
 
 dependencies {
+    //JUnit
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation group: 'org.mockito', name:'mockito-core', version: '5.12.0'
+    testImplementation group: 'org.mockito', name:'mockito-junit-jupiter', version: '5.12.0'
+    testImplementation group: 'org.powermock', name: 'powermock-core', version: '2.0.9'
+
+
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut:micronaut-http-client-jdk")
@@ -39,6 +40,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
+
     //aws
     implementation group: 'software.amazon.awssdk', name: 'ssm', version: '2.12.0'
     implementation group: 'software.amazon.awssdk', name: 'secretsmanager', version: '2.23.2'
@@ -50,6 +52,8 @@ dependencies {
     //MAP
     implementation 'org.mapstruct:mapstruct:1.6.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0'
+    implementation 'com.amazonaws:aws-java-sdk-secretsmanager:1.12.385'
+    implementation('io.jsonwebtoken:jjwt:0.2')
 
     // Validaciones
     implementation("com.google.code.gson:gson:2.10.1")
@@ -62,6 +66,13 @@ dependencies {
     implementation group: 'com.amazonaws', name: 'aws-lambda-java-log4j2', version: '1.5.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
 
+    //AWS
+    implementation 'com.amazonaws:aws-java-sdk-ssm:1.12.429'
+    implementation(platform("software.amazon.awssdk:bom:2.27.21"))
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.1'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.11.0'
+
+
 }
 
 
@@ -72,8 +83,10 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-    compileJava.options.encoding = 'UTF-8';
-    compileJava.options.encoding= 'UTF-8';
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+//    sourceCompatibility = JavaVersion.toVersion("17")
+//    targetCompatibility = JavaVersion.toVersion("17")
 }
 
 
@@ -84,7 +97,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("co.com.ath.*")
+        annotations("com.coom.ath.*")
     }
     aot {
         // Please review carefully the optimizations enabled below
@@ -109,5 +122,11 @@ tasks.named("dockerfileNative") {
         "-Dio.netty.noPreferDirect=true"
     )
 }
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
 
 
