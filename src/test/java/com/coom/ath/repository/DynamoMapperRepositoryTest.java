@@ -33,7 +33,7 @@ public class DynamoMapperRepositoryTest {
     }
 
     @Test
-    public void testGetClient_withMockedClient() {
+    public void testGetClient() {
         // Este test solo verifica que el método se puede llamar y no retorna null
         DynamoDbEnhancedClient client = repository.getClient();
         assertNotNull(client);

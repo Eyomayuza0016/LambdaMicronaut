@@ -44,7 +44,7 @@ public class ConsumiServiceTest {
     }
 
     @Test
-    void testEnrollmentKeyService_success() throws Exception {
+    void testEnrollment() throws Exception {
         // Arrange
         ConsumiService service = new ConsumiService();
 

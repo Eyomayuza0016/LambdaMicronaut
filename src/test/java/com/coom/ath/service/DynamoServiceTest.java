@@ -39,7 +39,7 @@ public class DynamoServiceTest {
     }
 
     @Test
-    public void testSaveUsuario_callsRepositorySaveWithMappedEntity() {
+    public void testSave() {
         // Arrange
         Usuario usuario = new Usuario(); // Este es el DTO que normalmente viene desde el handler
         UsuarioEntity usuarioEntity = new UsuarioEntity();
@@ -64,7 +64,7 @@ public class DynamoServiceTest {
     }
 
     @Test
-    public void testGetUsuario_returnsCorrectEntity() {
+    public void testGet() {
         // Arrange
         Usuario usuario = new Usuario();
         usuario.setTipI("CC");
